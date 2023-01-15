@@ -1,0 +1,18 @@
+<%- include("./partials/header") %>
+
+<div id="nav">
+    <a href="/route/share" class="add">Add</a>
+    <a href="/route/logout" class="logout">Logout</a>
+</div>
+
+<h2 >Share Your Today's Progress 📈🪴</h2>
+<div class="container">
+    <div class="form">
+    <form action="/route/share" method="post">
+        <textarea name="textContent" id="text" cols="40" rows="10"></textarea>
+        <button type="submit" class="btn-s btn">Share</button>
+    </form>
+    </div>
+</div>
+
+<%- include("./partials/footer") %>

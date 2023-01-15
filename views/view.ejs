@@ -1,0 +1,37 @@
+<%- include("./partials/header") %>
+
+<div id="nav">
+  <a href="/route/share" class="add">Add</a>
+  <a href="/route/logout" class="logout">Logout</a>
+</div>
+
+<% if(locals.Messages) { %>
+<div class="container-m">
+  <% Messages.forEach(message=> { %>
+   <% if(message.dt.date){ %>
+      <div class="badge-d">
+        <%= message.dt.date %>
+      </div>
+   <% } %>
+    <div class="message" id="msg">
+        <div class="info">
+          <h4><%= message.name %></h4>
+              <div class="content">
+                <p> <%= message.content %> </p>
+                </div>
+                <%= message.dt.time %>
+        </div>
+      </div>
+  <% }) %>
+</div>
+<% } else { %>
+    <h2>No progress Available</h2>
+<% } %>
+
+<script type="text/javascript">
+    window.addEventListener("load",()=>{
+      window.scrollTo(0,9999999);
+    })
+</script>
+
+<%- include("./partials/footer") %>
