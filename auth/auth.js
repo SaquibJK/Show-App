@@ -5,13 +5,21 @@ const passport = require("passport");
 const User = require("../models/User");
 
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+local = {
+  protocol: "http",
+  host: "localhost:4040",
+};
 
+dev = {
+  protocol: "https",
+  host: "progress-app-serv.onrender.com",
+};
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: `http://localhost:${port}/route/auth/google/callback`,
+      callbackURL: `${dev.protocol}://${dev.host}/route/auth/google/callback`,
     },
 
     function (accessToken, refreshToken, profile, cb) {
@@ -19,7 +27,7 @@ passport.use(
         {
           googleId: profile.id,
           Name: profile.name.givenName,
-          img: profile.photos[0].value
+          img: profile.photos[0].value,
         },
         function (err, user) {
           return cb(err, user);
