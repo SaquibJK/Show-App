@@ -3,10 +3,10 @@ dotenv.config();
 const express = require("express");
 const router = express.Router();
 const Message = require("../models/Message");
-const { date, time } = require("../functions/functions");
 const passport = require("passport");
 const { ensureAuth, ensureGuest } = require("../auth/check");
 require("../auth/auth");
+const moment = require("moment");
 var userName;
 
 //oauth
@@ -58,8 +58,8 @@ router.get("/share",ensureAuth, (req, res) => {
 
 router.post("/share", async (req, res) => {
   let msg = req.body.textContent;
-  let d = date();
-  let t = time();
+  let d = moment().format("DD/MM/YYYY");;
+  let t = moment().format("HH:mm A");
   if (userName && msg) {
     let messages = await Message.find({});
     let dates = messages.map((msg) => msg.dt.date);
