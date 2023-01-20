@@ -5,7 +5,7 @@
   <a href="/route/logout" class="logout">Logout</a>
 </div>
 
-<% if(locals.Messages) { %>
+<% if(locals.Messages.length != 0) { %>
 <div class="container-m">
   <% Messages.forEach(message=> { %>
    <% if(message.dt.date){ %>
