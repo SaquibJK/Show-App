@@ -6,7 +6,8 @@ const Message = require("../models/Message");
 const passport = require("passport");
 const { ensureAuth, ensureGuest } = require("../auth/check");
 require("../auth/auth");
-const moment = require("moment");
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Kolkata");
 var userName;
 
 //oauth
