@@ -19,7 +19,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: `${dev.protocol}://${dev.host}/route/auth/google/callback`,
+      callbackURL: `${local.protocol}://${local.host}/route/auth/google/callback`,
     },
 
     function (accessToken, refreshToken, profile, cb) {

@@ -14,11 +14,9 @@ var userName;
 const session = require("express-session");
 const { v4: uuidv4 } = require("uuid");
 
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", true);
-mongoose.connect(process.env.MONGO_URI, (err) => {
-  err ? console.log(err) : console.log("DB 💥");
-});
+// DB
+const connect = require("../functions/db");
+connect();
 
 router.use(
   session({
@@ -53,53 +51,44 @@ router.get("/view", ensureAuth, async (req, res) => {
   res.render("view", { Messages: messages, dates: dates });
 });
 
-router.get("/share",ensureAuth, (req, res) => {
+router.get("/share", ensureAuth, (req, res) => {
   res.render("share");
 });
 
 router.post("/share", async (req, res) => {
-  let msg = req.body.textContent;
-  let d = moment().format("DD/MM/YYYY");;
-  let t = moment().format("HH:mm A");
-  if (userName && msg) {
-    let messages = await Message.find({});
-    let dates = messages.map((msg) => msg.dt.date);
-    if (dates.includes(d)) {
-      var newMsg = new Message({
-        name: userName,
-        content: msg,
-        dt: {
-          time: t,
-        },
-      });
-    } else {
-      var newMsg = new Message({
-        name: userName,
-        content: msg,
-        dt: {
-          date: d,
-          time: t,
-        },
-      });
-    }
-    newMsg.save((err) => {
-      err ? console.log(err) : console.error("Message Added Successfully");
+  const msg = req.body.textContent;
+  const d = moment().format("DD/MM/YYYY");
+  const t = moment().format("HH:mm A");
+
+  if (!userName || !msg) {
+    return res.status(400).send("Invalid Input");
+  }
+
+  try {
+    const messages = await Message.find({});
+    const dates = messages.map((msg) => msg.dt.date);
+    const newMsg = new Message({
+      name: userName,
+      content: msg,
+      dt: dates.includes(d) ? { time: t } : { date: d, time: t },
     });
+    await newMsg.save();
     res.redirect("view");
-  } else {
-    res.send("Something Went Wrong try logging in again");
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Internal Server error");
   }
 });
 
 router.get("/login", ensureGuest, (req, res) => {
   res.render("index");
-})
+});
 
 router.get("/logout", ensureAuth, (req, res) => {
-    req.logout(req.user, (err) => {
-      if (err) return next(err);
-      res.redirect("/");
-    });
-})
+  req.logout(req.user, (err) => {
+    if (err) return next(err);
+    res.redirect("/");
+  });
+});
 
 module.exports = router;
